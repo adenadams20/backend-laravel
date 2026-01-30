@@ -13,6 +13,7 @@ class HotelController extends Controller
     {
         $hotels = Hotel::latest()->get();
 
+        // Ajouter l'URL complète de l'image pour le frontend
         $hotels->transform(function ($hotel) {
             $hotel->image_url = $hotel->image ? asset('storage/' . $hotel->image) : null;
             return $hotel;
@@ -21,12 +22,13 @@ class HotelController extends Controller
         return response()->json($hotels);
     }
 
-    // 🔹 Création
+    // 🔹 Création d'un hôtel
     public function store(Request $request)
     {
         try {
             $validated = $request->validate([
                 'name' => 'required|string|max:255',
+                'description' => 'nullable|string',
                 'address' => 'nullable|string|max:255',
                 'email' => 'nullable|email|max:255',
                 'phone' => 'nullable|string|max:50',
@@ -35,11 +37,18 @@ class HotelController extends Controller
                 'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             ]);
 
+            // Upload image si présente
             if ($request->hasFile('image')) {
                 $validated['image'] = $request->file('image')->store('hotels', 'public');
             }
 
+            // Valeurs par défaut si null
+            $validated['price'] = $validated['price'] ?? 0;
+            $validated['currency'] = $validated['currency'] ?? 'USD';
+
             $hotel = Hotel::create($validated);
+
+            // Ajouter l'URL complète pour l'image
             $hotel->image_url = $hotel->image ? asset('storage/' . $hotel->image) : null;
 
             return response()->json($hotel, 201);
@@ -52,12 +61,13 @@ class HotelController extends Controller
         }
     }
 
-    // 🔹 Mise à jour
+    // 🔹 Mise à jour d'un hôtel
     public function update(Request $request, Hotel $hotel)
     {
         try {
             $validated = $request->validate([
                 'name' => 'required|string|max:255',
+                'description' => 'nullable|string',
                 'address' => 'nullable|string|max:255',
                 'email' => 'nullable|email|max:255',
                 'phone' => 'nullable|string|max:50',
@@ -66,6 +76,7 @@ class HotelController extends Controller
                 'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             ]);
 
+            // Upload image si présente, supprimer l'ancienne
             if ($request->hasFile('image')) {
                 if ($hotel->image) {
                     Storage::disk('public')->delete($hotel->image);
@@ -73,7 +84,13 @@ class HotelController extends Controller
                 $validated['image'] = $request->file('image')->store('hotels', 'public');
             }
 
+            // Valeurs par défaut si null
+            $validated['price'] = $validated['price'] ?? $hotel->price ?? 0;
+            $validated['currency'] = $validated['currency'] ?? $hotel->currency ?? 'USD';
+
             $hotel->update($validated);
+
+            // Ajouter URL complète
             $hotel->image_url = $hotel->image ? asset('storage/' . $hotel->image) : null;
 
             return response()->json($hotel);
@@ -86,13 +103,15 @@ class HotelController extends Controller
         }
     }
 
-    // 🔹 Suppression
+    // 🔹 Suppression d'un hôtel
     public function destroy(Hotel $hotel)
     {
         try {
+            // Supprimer l'image si existante
             if ($hotel->image) {
                 Storage::disk('public')->delete($hotel->image);
             }
+
             $hotel->delete();
 
             return response()->json([
