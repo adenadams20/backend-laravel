@@ -9,6 +9,7 @@ return [
     'allowed_origins' => [
         'http://localhost:5174',
         'http://127.0.0.1:8000',
+        'https://red-product-cn78.vercel.app'
     ],
 
     'allowed_origins_patterns' => [],
