@@ -6,22 +6,53 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up(): void
-    {
-        Schema::table('hotels', function (Blueprint $table) {
+   public function up(): void
+{
+    Schema::table('hotels', function (Blueprint $table) {
+        // Modifier description si existante
+        if (Schema::hasColumn('hotels', 'description')) {
             $table->text('description')->nullable()->change();
-            $table->string('address')->nullable();
-            $table->string('email')->nullable();
-            $table->string('phone')->nullable();
-            $table->decimal('price', 10, 2)->default(0);
-            $table->string('currency', 5)->default('USD');
-        });
-    }
+        }
 
-    public function down(): void
-    {
-        Schema::table('hotels', function (Blueprint $table) {
-            $table->dropColumn(['address', 'email', 'phone', 'price', 'currency']);
-        });
-    }
+        // Ajouter les colonnes seulement si elles n’existent pas
+        if (!Schema::hasColumn('hotels', 'address')) {
+            $table->string('address')->nullable();
+        }
+        if (!Schema::hasColumn('hotels', 'email')) {
+            $table->string('email')->nullable();
+        }
+        if (!Schema::hasColumn('hotels', 'phone')) {
+            $table->string('phone')->nullable();
+        }
+        if (!Schema::hasColumn('hotels', 'price')) {
+            $table->decimal('price', 10, 2)->nullable()->change();
+        }
+        if (!Schema::hasColumn('hotels', 'currency')) {
+            $table->string('currency', 5)->nullable()->change();
+        }
+    });
+}
+
+
+   public function down(): void
+{
+    Schema::table('hotels', function (Blueprint $table) {
+        if (Schema::hasColumn('hotels', 'address')) {
+            $table->dropColumn('address');
+        }
+        if (Schema::hasColumn('hotels', 'email')) {
+            $table->dropColumn('email');
+        }
+        if (Schema::hasColumn('hotels', 'phone')) {
+            $table->dropColumn('phone');
+        }
+        if (Schema::hasColumn('hotels', 'price')) {
+            $table->dropColumn('price');
+        }
+        if (Schema::hasColumn('hotels', 'currency')) {
+            $table->dropColumn('currency');
+        }
+    });
+}
+
 };

@@ -15,8 +15,8 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
-            $table->decimal('price', 10, 2);
-            $table->string('currency', 5);
+            $table->decimal('price', 10, 2)->nullable();
+            $table->string('currency', 5) ->nullable();
             $table->string('image')->nullable();
             $table->timestamps();
         });
