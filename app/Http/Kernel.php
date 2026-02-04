@@ -35,16 +35,12 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
+'api' => [
+     \Illuminate\Http\Middleware\HandleCors::class,
+    'throttle:api',
+    \Illuminate\Routing\Middleware\SubstituteBindings::class,
+],
 
-        'api' => [
-            // Limite le nombre de requêtes par minute
-            
-            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-            'throttle:api',
-            \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            // Si tu veux que Sanctum fonctionne avec cookie-based auth :
-            // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-        ],
     ];
 
     /**

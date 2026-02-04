@@ -5,6 +5,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\HotelController;
 
+Route::options('/{any}', function () {
+    return response()->json([], 200);
+})->where('any', '.*');
 /*
 |--------------------------------------------------------------------------
 | API Routes
