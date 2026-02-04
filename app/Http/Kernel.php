@@ -13,14 +13,11 @@ class Kernel extends HttpKernel
      */
     protected $middleware = [
         // Gère les requêtes CORS
-        \Fruitcake\Cors\HandleCors::class,
-
-        // Middleware de base Laravel
-        \App\Http\Middleware\TrustProxies::class,
-        \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
-        \App\Http\Middleware\TrimStrings::class,
-        \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
-        \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
+        \Illuminate\Http\Middleware\HandleCors::class,
+    \App\Http\Middleware\TrustProxies::class,
+    \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
+    \App\Http\Middleware\TrimStrings::class,
+    \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
     ];
 
     /**
