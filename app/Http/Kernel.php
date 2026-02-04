@@ -16,14 +16,16 @@ use App\Http\Middleware\VerifyCsrfToken;
 
 class Kernel extends HttpKernel
 {
+    // Middleware global pour **toutes** les requêtes
     protected $middleware = [
-        HandleCors::class,         // CORS en premier
+        HandleCors::class, // en premier !
         TrustProxies::class,
         ValidatePostSize::class,
         TrimStrings::class,
         ConvertEmptyStringsToNull::class,
     ];
 
+    // Groupes de middleware
     protected $middlewareGroups = [
         'web' => [
             EncryptCookies::class,
@@ -35,11 +37,13 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
+            HandleCors::class,     // ✅ CORS activé pour les routes API
             'throttle:api',
             SubstituteBindings::class,
         ],
     ];
 
+    // Middleware assignables aux routes
     protected $routeMiddleware = [
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
