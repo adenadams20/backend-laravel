@@ -8,6 +8,7 @@ return [
 
     'allowed_origins' => [
         'https://red-product-cn78.vercel.app',
+        'http://backend-laravel.up.railway.app',
     ],
 
     'allowed_headers' => ['*'],
