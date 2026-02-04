@@ -6,7 +6,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\HotelController;
 
 Route::options('/{any}', function () {
-    return response()->json([], 200);
+    return response()->json([], 204);
 })->where('any', '.*');
 /*
 |--------------------------------------------------------------------------
