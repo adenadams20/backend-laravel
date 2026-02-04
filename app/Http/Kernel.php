@@ -8,7 +8,7 @@ use Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull;
 use Illuminate\Foundation\Http\Middleware\ValidatePostSize;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 
-// Middleware de ton App
+// Middleware App
 use App\Http\Middleware\TrustProxies;
 use App\Http\Middleware\TrimStrings;
 use App\Http\Middleware\EncryptCookies;
@@ -16,16 +16,14 @@ use App\Http\Middleware\VerifyCsrfToken;
 
 class Kernel extends HttpKernel
 {
-    // Middleware global pour **toutes** les requêtes
     protected $middleware = [
-        HandleCors::class, // en premier !
+        HandleCors::class, // TOUJOURS en premier
         TrustProxies::class,
         ValidatePostSize::class,
         TrimStrings::class,
         ConvertEmptyStringsToNull::class,
     ];
 
-    // Groupes de middleware
     protected $middlewareGroups = [
         'web' => [
             EncryptCookies::class,
@@ -37,13 +35,12 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
-            HandleCors::class,     // ✅ CORS activé pour les routes API
+             \Illuminate\Http\Middleware\HandleCors::class,
             'throttle:api',
-            SubstituteBindings::class,
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ];
 
-    // Middleware assignables aux routes
     protected $routeMiddleware = [
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
